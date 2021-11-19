@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 const typeDefs = gql`
     type Query{
         sayHi: String!
-        getPosts: [Post]
+        getPosts(offset: Int!, limit: Int!): [Post]
         getPost(postId: ID!): Post
     }
 

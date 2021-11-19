@@ -9,9 +9,9 @@ const postResolvers = {
     Query: {
         sayHi: () => 'Hello World!',
 
-        getPosts: async () => {
+        getPosts: async (_, {offset, limit}) => {
             try {
-                const Posts = await post.find().sort({createdAt: -1})
+                const Posts = await post.find().sort({createdAt: -1}).skip(offset).limit(limit)
                 return Posts
             } catch (error) {
                 throw new Error(error)

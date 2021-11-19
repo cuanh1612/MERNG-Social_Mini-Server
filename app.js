@@ -23,42 +23,42 @@ mongoose.connect(uri, {
 
 
 const r = async () => {
-const app = express()
-const httpServer = createServer(app)
+  const app = express()
+  const httpServer = createServer(app)
 
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
-})
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
 
 
 
-const server = new ApolloServer({
-  schema,
-  plugins: [{
-    async serverWillStart() {
-      return {
-        async drainServer() {
-          subscriptionServer.close();
-        }
-      };
-    }
-  }],
-  context: ({req})=> ({req})
-});
+  const server = new ApolloServer({
+    schema,
+    plugins: [{
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            subscriptionServer.close();
+          }
+        };
+      }
+    }],
+    context: ({ req }) => ({ req })
+  });
 
-const subscriptionServer = SubscriptionServer.create(
-  { schema, execute, subscribe },
-  { server: httpServer, path: server.graphqlPath }
-);
+  const subscriptionServer = SubscriptionServer.create(
+    { schema, execute, subscribe },
+    { server: httpServer, path: server.graphqlPath }
+  );
 
-await server.start();
-server.applyMiddleware({ app });
+  await server.start();
+  server.applyMiddleware({ app });
 
-const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT, () =>
-  console.log(`Server is now running on http://localhost:${PORT}/graphql`)
-);
+  const PORT = process.env.PORT || 5000;
+  httpServer.listen(PORT, () =>
+    console.log(`Server is now running on http://localhost:${PORT}/graphql`)
+  );
 }
 
 r()
